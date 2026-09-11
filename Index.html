@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnWithDolphin</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --deep: #031d35;
+    --ocean: #073b60;
+    --blue: #159fe0;
+    --cyan: #5de5ff;
+    --white: #f5fbff;
+    --muted: #9bc4d8;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--white);
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at 50% -10%, #1688c5 0%, transparent 38%),
+        linear-gradient(180deg, #062f50, var(--deep));
+}
+
+/* Ocean bubbles */
+
+.bubbles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bubble {
+    position: absolute;
+    bottom: -50px;
+    width: 15px;
+    height: 15px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+    animation: rise linear infinite;
+}
+
+.bubble:nth-child(1) {
+    left: 10%;
+    animation-duration: 9s;
+}
+
+.bubble:nth-child(2) {
+    left: 30%;
+    width: 8px;
+    height: 8px;
+    animation-duration: 12s;
+}
+
+.bubble:nth-child(3) {
+    left: 55%;
+    width: 20px;
+    height: 20px;
+    animation-duration: 10s;
+}
+
+.bubble:nth-child(4) {
+    left: 78%;
+    animation-duration: 14s;
+}
+
+.bubble:nth-child(5) {
+    left: 90%;
+    width: 9px;
+    height: 9px;
+    animation-duration: 8s;
+}
+
+@keyframes rise {
+    from {
+        transform: translateY(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .7;
+    }
+
+    to {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
+}
+
+/* App */
+
+.app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 600px;
+    min-height: 100vh;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header */
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.logo-dolphin {
+    font-size: 32px;
+}
+
+.logo-name {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.menu {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 50%;
+    color: white;
+    background: rgba(255,255,255,.08);
+    font-size: 20px;
+}
+
+/* Screens */
+
+.screen {
+    display: none;
+    min-height: calc(100vh - 90px);
+    padding-top: 35px;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Aqua */
+
+.aqua-area {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.aqua {
+    font-size: 105px;
+    display: inline-block;
+    animation: swim 3s ease-in-out infinite;
+    filter: drop-shadow(0 15px 20px rgba(0,0,0,.25));
+}
+
+@keyframes swim {
+    0%,100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateY(-12px) rotate(2deg);
+    }
+}
+
+/* Speech */
+
+.speech {
+    margin: 25px auto;
+    width: 100%;
+    max-width: 470px;
+    padding: 20px;
+    border: 1px solid rgba(93,229,255,.3);
+    border-radius: 22px;
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(15px);
+}
+
+.speech h2 {
+    margin-bottom: 9px;
+    font-size: 25px;
+}
+
+.speech p {
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+/* Buttons */
+
+.primary {
+    width: 100%;
+    max-width: 470px;
+    margin: 12px auto;
+    padding: 16px;
+    border: none;
+    border-radius: 18px;
+    color: white;
+    background: linear-gradient(135deg, #13a9ed, #087ac1);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0,150,220,.25);
+    transition: .2s;
+}
+
+.primary:active {
+    transform: scale(.97);
+}
+
+/* Form */
+
+.form-title {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.form-title h2 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.form-title p {
+    color: var(--muted);
+}
+
+.input {
+    width: 100%;
+    padding: 17px;
+    border: 1px solid rgba(255,255,255,.15);
+    outline: none;
+    border-radius: 17px;
+    color: white;
+    background: rgba(255,255,255,.08);
+    font-size: 16px;
+}
+
+.input:focus {
+    border-color: var(--cyan);
+}
+
+.input::placeholder {
+    color: #779eb1;
+}
+
+/* Choice cards */
+
+.choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.choice {
+    min-height: 90px;
+    padding: 15px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 18px;
+    color: white;
+    background: rgba(255,255,255,.07);
+    cursor: pointer;
+    transition: .2s;
+}
+
+.choice:hover {
+    background: rgba(255,255,255,.13);
+    transform: translateY(-2px);
+}
+
+.choice.selected {
+    border: 2px solid var(--cyan);
+    background: rgba(30,180,235,.18);
+    box-shadow: 0 0 20px rgba(50,210,255,.15);
+}
+
+.choice-icon {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.choice-name {
+    font-weight: 600;
+}
+
+/* Progress */
+
+.progress {
+    margin-top: auto;
+    padding-top: 25px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 5px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.1);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    background: var(--cyan);
+    transition: width .4s ease;
+}
+
+.progress-text {
+    margin-top: 8px;
+    text-align: center;
+    color: #789fb2;
+    font-size: 12px;
+}
+
+/* Summary */
+
+.summary {
+    padding: 18px;
+    border: 1px solid rgba(93,229,255,.25);
+    border-radius: 20px;
+    background: rgba(255,255,255,.07);
+    margin-top: 15px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    color: var(--muted);
+}
+
+.summary-value {
+    text-align: right;
+    font-weight: 600;
+}
+
+/* Mobile */
+
+@media(max-width: 400px) {
+    .aqua {
+        font-size: 85px;
+    }
+
+    .speech h2 {
+        font-size: 22px;
+    }
+
+    .choices {
+        gap: 9px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background bubbles -->
+<div class="bubbles">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+</div>
+
+<div class="app">
+
+<header>
+    <div class="logo">
+        <span class="logo-dolphin">🐬</span>
+        <span class="logo-name">LearnWithDolphin</span>
+    </div>
+
+    <button class="menu">☰</button>
+</header>
+
+
+<!-- 1. WELCOME -->
+
+<section class="screen active" id="screen1">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="speech">
+        <h2>Hi! I'm Aqua! 🐬</h2>
+        <p>
+            I'm going to be your teacher for this session.
+            We'll learn together, step by step.
+        </p>
+    </div>
+
+    <button class="primary" onclick="nextScreen()">
+        Hi Aqua! 👋
+    </button>
+
+</section>
+
+
+<!-- 2. NAME -->
+
+<section class="screen" id="screen2">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="form-title">
+        <h2>What's your name?</h2>
+        <p>I'd love to know who I'm learning with!</p>
+    </div>
+
+    <input
+        class="input"
+        id="nameInput"
+        placeholder="Type your name..."
+        maxlength="30"
+    >
+
+    <button class="primary" onclick="saveName()">
+        Continue →
+    </button>
+
+</section>
+
+
+<!-- 3. SUBJECT -->
+
+<section class="screen" id="screen3">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="form-title">
+        <h2 id="nameGreeting">Nice to meet you!</h2>
+        <p>What would you like to learn today?</p>
+    </div>
+
+    <div class="choices">
+
+        <button class="choice" onclick="selectChoice(this,'subject','Mathematics')">
+            <span class="choice-icon">📐</span>
+            <span class="choice-name">Mathematics</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'subject','Science')">
+            <span class="choice-icon">🔬</span>
+            <span class="choice-name">Science</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'subject','English')">
+            <span class="choice-icon">📖</span>
+            <span class="choice-name">English</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'subject','Social Studies')">
+            <span class="choice-icon">🌍</span>
+            <span class="choice-name">Social Studies</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'subject','Computer Science')">
+            <span class="choice-icon">💻</span>
+            <span class="choice-name">Computer Science</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'subject','Other')">
+            <span class="choice-icon">✨</span>
+            <span class="choice-name">Other</span>
+        </button>
+
+    </div>
+
+    <button class="primary" onclick="nextScreen()">
+        Continue →
+    </button>
+
+</section>
+
+
+<!-- 4. DIFFICULTY -->
+
+<section class="screen" id="screen4">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="form-title">
+        <h2>How difficult is it?</h2>
+        <p>Be honest! This helps Aqua teach better.</p>
+    </div>
+
+    <div class="choices">
+
+        <button class="choice" onclick="selectChoice(this,'difficulty','Easy')">
+            <span class="choice-icon">😊</span>
+            <span class="choice-name">Easy</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'difficulty','Medium')">
+            <span class="choice-icon">🙂</span>
+            <span class="choice-name">Medium</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'difficulty','Hard')">
+            <span class="choice-icon">😵</span>
+            <span class="choice-name">Hard</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'difficulty','Very hard')">
+            <span class="choice-icon">🌊</span>
+            <span class="choice-name">I don't understand it</span>
+        </button>
+
+    </div>
+
+    <button class="primary" onclick="nextScreen()">
+        Continue →
+    </button>
+
+</section>
+
+
+<!-- 5. KNOWLEDGE -->
+
+<section class="screen" id="screen5">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="form-title">
+        <h2>What do you already know?</h2>
+        <p>There are no wrong answers.</p>
+    </div>
+
+    <div class="choices">
+
+        <button class="choice" onclick="selectChoice(this,'knowledge','Nothing yet')">
+            <span class="choice-icon">🌱</span>
+            <span class="choice-name">Nothing yet</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'knowledge','A little')">
+            <span class="choice-icon">🌿</span>
+            <span class="choice-name">A little</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'knowledge','Basics')">
+            <span class="choice-icon">🌳</span>
+            <span class="choice-name">I know the basics</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'knowledge','Good')">
+            <span class="choice-icon">🧠</span>
+            <span class="choice-name">I'm pretty good</span>
+        </button>
+
+    </div>
+
+    <button class="primary" onclick="nextScreen()">
+        Continue →
+    </button>
+
+</section>
+
+
+<!-- 6. BOOK -->
+
+<section class="screen" id="screen6">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="form-title">
+        <h2>Are you using a book?</h2>
+        <p>Tell Aqua which book you're learning from.</p>
+    </div>
+
+    <input
+        class="input"
+        id="bookInput"
+        placeholder="Book name (optional)"
+        maxlength="100"
+    >
+
+    <button class="primary" onclick="saveBook()">
+        Continue →
+    </button>
+
+</section>
+
+
+<!-- 7. CHAPTER -->
+
+<section class="screen" id="screen7">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="form-title">
+        <h2>Which chapter?</h2>
+        <p>We'll focus today's lesson here.</p>
+    </div>
+
+    <input
+        class="input"
+        id="chapterInput"
+        placeholder="Chapter name or number"
+        maxlength="100"
+    >
+
+    <button class="primary" onclick="saveChapter()">
+        Continue →
+    </button>
+
+</section>
+
+
+<!-- 8. GOAL -->
+
+<section class="screen" id="screen8">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="form-title">
+        <h2>What's your goal?</h2>
+        <p>What do you want to accomplish today?</p>
+    </div>
+
+    <div class="choices">
+
+        <button class="choice" onclick="selectChoice(this,'goal','Understand the chapter')">
+            <span class="choice-icon">📚</span>
+            <span class="choice-name">Understand the chapter</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'goal','Prepare for a test')">
+            <span class="choice-icon">📝</span>
+            <span class="choice-name">Prepare for a test</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'goal','Do homework')">
+            <span class="choice-icon">✏️</span>
+            <span class="choice-name">Do my homework</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'goal','Practice questions')">
+            <span class="choice-icon">🧠</span>
+            <span class="choice-name">Practice questions</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'goal','Revise')">
+            <span class="choice-icon">🔄</span>
+            <span class="choice-name">Revise</span>
+        </button>
+
+        <button class="choice" onclick="selectChoice(this,'goal','Learn from beginning')">
+            <span class="choice-icon">🌊</span>
+            <span class="choice-name">Start from the beginning</span>
+        </button>
+
+    </div>
+
+    <button class="primary" onclick="finishSetup()">
+        Let's Dive In! 🌊
+    </button>
+
+</section>
+
+
+<!-- 9. READY -->
+
+<section class="screen" id="screen9">
+
+    <div class="aqua-area">
+        <div class="aqua">🐬</div>
+    </div>
+
+    <div class="speech">
+        <h2 id="readyTitle">Perfect!</h2>
+        <p>
+            I've got everything I need.
+            Here's what we'll be learning today.
+        </p>
+    </div>
+
+    <div class="summary">
+
+        <div class="summary-row">
+            <span class="summary-label">Student</span>
+            <span class="summary-value" id="summaryName"></span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Subject</span>
+            <span class="summary-value" id="summarySubject"></span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Difficulty</span>
+            <span class="summary-value" id="summaryDifficulty"></span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Knowledge</span>
+            <span class="summary-value" id="summaryKnowledge"></span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Book</span>
+            <span class="summary-value" id="summaryBook"></span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Chapter</span>
+            <span class="summary-value" id="summaryChapter"></span>
+        </div>
+
+        <div class="summary-row">
+            <span class="summary-label">Goal</span>
+            <span class="summary-value" id="summaryGoal"></span>
+        </div>
+
+    </div>
+
+    <button class="primary" onclick="startLesson()">
+        🌊 Start Learning
+    </button>
+
+</section>
+
+
+<!-- Progress -->
+
+<div class="progress" id="progress">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="progress-text" id="progressText">
+        1 / 8
+    </div>
+</div>
+
+</div>
+
+
+<script>
+
+/* Student information */
+
+const student = {
+    name: "",
+    subject: "",
+    difficulty: "",
+    knowledge: "",
+    book: "",
+    chapter: "",
+    goal: ""
+};
+
+let currentScreen = 1;
+
+
+/* Move to next screen */
+
+function nextScreen() {
+
+    if (currentScreen < 9) {
+        document.getElementById("screen" + currentScreen)
+            .classList.remove("active");
+
+        currentScreen++;
+
+        document.getElementById("screen" + currentScreen)
+            .classList.add("active");
+
+        updateProgress();
+    }
+}
+
+
+/* Save name */
+
+function saveName() {
+
+    const name = document.getElementById("nameInput").value.trim();
+
+    if (!name) {
+        alert("Aqua needs your name first! 🐬");
+        return;
+    }
+
+    student.name = name;
+
+    document.getElementById("nameGreeting").textContent =
+        "Nice to meet you, " + name + "! 🐬";
+
+    nextScreen();
+}
+
+
+/* Save book */
+
+function saveBook() {
+
+    student.book =
+        document.getElementById("bookInput").value.trim();
+
+    if (!student.book) {
+        student.book = "No specific book";
+    }
+
+    nextScreen();
+}
+
+
+/* Save chapter */
+
+function saveChapter() {
+
+    student.chapter =
+        document.getElementById("chapterInput").value.trim();
+
+    if (!student.chapter) {
+        alert("Tell Aqua which chapter you're learning! 🐬");
+        return;
+    }
+
+    nextScreen();
+}
+
+
+/* Select a choice */
+
+function selectChoice(button, property, value) {
+
+    student[property] = value;
+
+    const parent = button.parentElement;
+
+    parent.querySelectorAll(".choice").forEach(choice => {
+        choice.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+}
+
+
+/* Finish setup */
+
+function finishSetup() {
+
+    if (!student.subject ||
+        !student.difficulty ||
+        !student.knowledge ||
+        !student.goal) {
+
+        alert("Choose an answer first! 🐬");
+        return;
+    }
+
+    document.getElementById("summaryName").textContent =
+        student.name;
+
+    document.getElementById("summarySubject").textContent =
+        student.subject;
+
+    document.getElementById("summaryDifficulty").textContent =
+        student.difficulty;
+
+    document.getElementById("summaryKnowledge").textContent =
+        student.knowledge;
+
+    document.getElementById("summaryBook").textContent =
+        student.book;
+
+    document.getElementById("summaryChapter").textContent =
+        student.chapter;
+
+    document.getElementById("summaryGoal").textContent =
+        student.goal;
+
+    document.getElementById("readyTitle").textContent =
+        "Perfect, " + student.name + "! 🐬";
+
+    nextScreen();
+}
+
+
+/* Start lesson */
+
+function startLesson() {
+
+    alert(
+        "Lesson system coming next! 🐬\n\n" +
+        "This is where we'll connect the AI teacher."
+    );
+
+}
+
+
+/* Progress bar */
+
+function updateProgress() {
+
+    const percentage =
+        ((currentScreen - 1) / 8) * 100;
+
+    document.getElementById("progressFill")
+        .style.width = percentage + "%";
+
+    document.getElementById("progressText")
+        .textContent = currentScreen + " / 8";
+}
+
+</script>
+
+</body>
+      </html>
